@@ -1,4 +1,4 @@
-# Junit
+# JUnit
 
 ### JUnit User Guide
 
