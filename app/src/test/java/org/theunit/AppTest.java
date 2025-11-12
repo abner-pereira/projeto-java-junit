@@ -3,13 +3,51 @@
  */
 package org.theunit;
 
-import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
 class AppTest {
+	@BeforeAll
+	static void initAll() {
+
+	}
+
+	@BeforeEach
+	void init() {
+
+	}
+
+	@DisplayName("Teste de Sucesso na Pontuação")
 	@Test
-	void appHasAGreeting() {
-		App classUnderTest = new App();
-		assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
+	void sucessProgress() {
+		Double[] score = { 8.3, 4.5 };
+		Double res = new App().getMedScore(score);
+		final Double EXP = 6.4;
+		assertEquals(EXP, res, "Falha no teste de verificação de sucesso na pontuação!");
+	}
+
+	@DisplayName("Teste de Erro na Pontuação")
+	@Test
+	void failProgress() {
+		Double[] score = { 4.1, 5.5 };
+		Double res = new App().getMedScore(score);
+		final Double EXP = 4.8;
+		assertEquals(EXP, res, "Falha no teste de verificação de fracasso na pontuação!");
+	}
+
+	@AfterEach
+	void tearDown() {
+
+	}
+
+	@AfterAll
+	static void tearDownAll() {
+
 	}
 }

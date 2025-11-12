@@ -4,11 +4,17 @@
 package org.theunit;
 
 public class App {
-	public String getGreeting() {
-		return "Hello World!";
+	public Double getMedScore(Double... score) {
+		Double endScore = 0.0;
+
+		for (Double scoreUnique : score) {
+			endScore += scoreUnique;
+		}
+
+		return endScore / score.length;
 	}
 
 	public static void main(String[] args) {
-		System.out.println(new App().getGreeting());
+		System.out.println(new App().getMedScore(Double.valueOf(7.8), Double.valueOf(8.1)));
 	}
 }
