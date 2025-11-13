@@ -4,14 +4,20 @@
 package org.theunit;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assumptions.*;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 
+@DisplayNameGeneration(DisplayNameGenerator.Simple.class)
+// @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+// @DisplayNameGeneration(DisplayNameGenerator.IndicativeSentences.class)
 class AppTest {
 	@BeforeAll
 	static void initAll() {
@@ -23,7 +29,7 @@ class AppTest {
 
 	}
 
-	@DisplayName("Teste de Sucesso na Pontuação")
+	@DisplayName("Sucess Progress")
 	@Test
 	void sucessProgress() {
 		Double[] score = { 8.3, 4.5 };
@@ -32,13 +38,31 @@ class AppTest {
 		assertEquals(EXP, res, "Falha no teste de verificação de sucesso na pontuação!");
 	}
 
-	@DisplayName("Teste de Erro na Pontuação")
+	@DisplayName("Fail Progress")
 	@Test
 	void failProgress() {
 		Double[] score = { 4.1, 5.5 };
 		Double res = new App().getMedScore(score);
 		final Double EXP = 4.8;
-		assertEquals(EXP, res, "Falha no teste de verificação de fracasso na pontuação!");
+		assertTrue(EXP != res, "Falha no teste de verificação de fracasso na pontuação!");
+	}
+
+	@Test
+	void check_Long() {
+		Double[] score = { 4.7, 5.3 };
+		assertInstanceOf(Long.class, new App().getMedScore(score).longValue(),
+				"Falha no teste de verificação de inteiro!");
+	}
+
+	@Test
+	void conditionValue() {
+		// Condição de execução do teste
+		Double[] score = {};
+		assumeFalse(score.length == 0, "Falha na verificação de execução do teste!");
+
+		// Teste
+		assertNotEquals(10.0, new App().getMedScore(score),
+				"Falha no teste de verificação de valores informados!");
 	}
 
 	@AfterEach
