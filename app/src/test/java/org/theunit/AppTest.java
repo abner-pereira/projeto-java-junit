@@ -21,12 +21,10 @@ import org.junit.jupiter.api.Test;
 class AppTest {
 	@BeforeAll
 	static void initAll() {
-
 	}
 
 	@BeforeEach
 	void init() {
-
 	}
 
 	@DisplayName("Sucess Progress")
@@ -65,13 +63,16 @@ class AppTest {
 				"Falha no teste de verificação de valores informados!");
 	}
 
+	@Test
+	void uncaughtException() {
+		new App().getMedScore(Double.valueOf("A.A"));
+	}
+
 	@AfterEach
 	void tearDown() {
-
 	}
 
 	@AfterAll
 	static void tearDownAll() {
-
 	}
 }

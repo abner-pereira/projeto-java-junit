@@ -29,10 +29,7 @@ dependencies {
 java {
     //toolchain {
     //    languageVersion = JavaLanguageVersion.of(21)
-    //}
-	
-	sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    //}	
 }
 
 application {
@@ -43,4 +40,9 @@ application {
 tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
+}
+
+tasks.withType<JavaCompile>().configureEach {
+	// Define a versão de compilação independente da JDK utilizada
+    options.release = 21
 }
