@@ -10,6 +10,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
@@ -27,45 +28,78 @@ class AppTest {
 	void init() {
 	}
 
-	@DisplayName("Sucess Progress")
+	@DisplayName("Test Assert Equals")
 	@Test
-	void sucessProgress() {
+	void testAssertEquals() {
 		Double[] score = { 8.3, 4.5 };
 		Double res = new App().getMedScore(score);
 		final Double EXP = 6.4;
-		assertEquals(EXP, res, "Falha no teste de verificação de sucesso na pontuação!");
+		assertEquals(EXP, res, "Falha no teste de verificação de sucesso na pontuação.");
 	}
 
-	@DisplayName("Fail Progress")
+	@DisplayName("Test Assert True")
 	@Test
-	void failProgress() {
+	void testAssertTrue() {
 		Double[] score = { 4.1, 5.5 };
 		Double res = new App().getMedScore(score);
 		final Double EXP = 4.8;
-		assertTrue(EXP != res, "Falha no teste de verificação de fracasso na pontuação!");
+		assertTrue(EXP != res, "Falha no teste de verificação de fracasso na pontuação.");
 	}
 
 	@Test
-	void check_Long() {
+	void testAssertInstanceOf() {
 		Double[] score = { 4.7, 5.3 };
 		assertInstanceOf(Long.class, new App().getMedScore(score).longValue(),
-				"Falha no teste de verificação de inteiro!");
+				"Falha no teste de verificação de inteiro.");
 	}
 
 	@Test
-	void conditionValue() {
+	void testAssume() {
 		// Condição de execução do teste
 		Double[] score = {};
-		assumeFalse(score.length == 0, "Falha na verificação de execução do teste!");
+		assumeFalse(score.length == 0, "Requisitos insuficientes para a execução do teste.");
 
 		// Teste
 		assertNotEquals(10.0, new App().getMedScore(score),
-				"Falha no teste de verificação de valores informados!");
+				"Falha no teste de verificação de valores informados.");
 	}
 
 	@Test
-	void uncaughtException() {
+	void testUncaughtException() {
 		new App().getMedScore(Double.valueOf("A.A"));
+	}
+
+	@Test
+	void testExceptionThrows() {
+		// Verifica a classe superior e subclasse
+		// RuntimeException -> IllegalArgumentException -> NumberFormatException
+		assertThrows(RuntimeException.class, () -> {
+			new App().getMedScore(Double.valueOf("A.C"));
+		}, "Falha no teste de verificação de exceção.");
+	}
+
+	@Test
+	void testExceptionThrowsExactly() {
+		// Somente a classe informada
+		// IllegalArgumentException -> NumberFormatException
+		assertThrowsExactly(IllegalArgumentException.class, () -> {
+			new App().getMedScore(Double.valueOf("E.10"));
+		}, "Falha no teste de verificação de exceção específica.");
+	}
+
+	@Test
+	void testExceptionDoesNotThrow() {
+		// SEM exceção, então OK
+		assertDoesNotThrow(() -> Long.valueOf("105"),
+				"Falha no teste de verificação de NÃO exceção.");
+	}
+
+	@Test
+	@Disabled
+	void testDisabled() {
+		// Teste com resultado ERRADO, mas que NÃO será executado
+		assertTrue(Integer.valueOf(1).equals(Character.valueOf('K')),
+				"Falha na verificação de igualdade de valores.");
 	}
 
 	@AfterEach
