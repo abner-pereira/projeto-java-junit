@@ -6,6 +6,8 @@ package org.theunit;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assumptions.*;
 
+import java.time.Duration;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -15,6 +17,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIf;
+import org.junit.jupiter.api.condition.EnabledIf;
 
 @DisplayNameGeneration(DisplayNameGenerator.Simple.class)
 // @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -100,6 +104,37 @@ class AppTest {
 		// Teste com resultado ERRADO, mas que NÃO será executado
 		assertTrue(Integer.valueOf(1).equals(Character.valueOf('K')),
 				"Falha na verificação de igualdade de valores.");
+	}
+
+	// Teste com Condição de Execução Interna
+	@Test
+	@EnabledIf("executeCondition")
+	void testCustomInternalCondition() {
+		assertDoesNotThrow(() -> Float.valueOf("25.6k"),
+				"Falha no teste interno de conversão de valores.");
+	}
+
+	boolean executeCondition() {
+		return false;
+	}
+
+	// Teste com Condição de Execução Externa
+	@Test
+	@DisabledIf("org.theunit.App#disableTestCondition")
+	void testCustomExternalCondition() {
+		assertThrows(NumberFormatException.class, () -> Double.valueOf("15.9E"),
+				"Falha no teste externo de conversão de valores.");
+	}
+
+	// Tag PRÓPRIA com @Test
+	@MyTagTest(autor = "John")
+	void testMyTag() {
+		assertTimeout(Duration.ofNanos(1), () -> {
+			final long MAX = 10000;
+			for (long idx = 0; idx < MAX; idx++) {
+
+			}
+		}, "Falha no teste de verificação de tempo de processamento.");
 	}
 
 	@AfterEach

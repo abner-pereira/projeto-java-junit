@@ -14,6 +14,10 @@ public class App {
 		return endScore / score.length;
 	}
 
+	public static boolean disableTestCondition() {
+		return false;
+	}
+
 	public static void main(String[] args) {
 		System.out.println(new App().getMedScore(Double.valueOf(7.8), Double.valueOf(8.1)));
 	}
