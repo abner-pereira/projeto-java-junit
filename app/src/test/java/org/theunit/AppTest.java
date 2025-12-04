@@ -17,6 +17,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.condition.DisabledIf;
 import org.junit.jupiter.api.condition.EnabledIf;
 
@@ -136,6 +137,40 @@ class AppTest {
 			}
 		}, "Falha no teste de verificação de tempo de processamento.");
 	}
+
+	// Classe Aninhada de Teste
+	@Nested
+	class SubAppTest {
+		static Integer count = 1;
+		Float valor;
+
+		@BeforeEach
+		void init() {
+			this.valor = 10.5f;
+		}
+
+		@Test
+		void executeSubTestSuccess() {
+			System.out.printf("Método %d da Classe Aninhada.%n", count);
+			assertEquals(Float.valueOf(10.5f), this.valor,
+					"Falha no teste de verificação de valor na Classe Aninhada.");
+		}
+
+		@Test
+		void executeSubTestError() {
+			System.out.printf("Método %d da Classe Aninhada.%n", count);
+			assertNotEquals(Float.valueOf(10.5f), this.valor,
+					"Falha no teste de verificação de valor na Classe Aninhada.");
+		}
+
+		@AfterEach
+		void tearDown() {
+			count++;
+		}
+	}
+
+	// Onde PAREI
+	// https://docs.junit.org/current/user-guide/#writing-tests-test-interfaces-and-default-methods
 
 	@AfterEach
 	void tearDown() {
