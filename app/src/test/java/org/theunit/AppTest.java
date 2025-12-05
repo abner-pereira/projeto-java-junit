@@ -18,6 +18,8 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.condition.DisabledIf;
 import org.junit.jupiter.api.condition.EnabledIf;
 
@@ -169,8 +171,23 @@ class AppTest {
 		}
 	}
 
+	// Repetição
+	final String MODEL_TITLE = "{displayName} {currentRepetition} of {totalRepetitions}";
+
+	@RepeatedTest(value = 5, name = MODEL_TITLE)
+	void testRepetition(RepetitionInfo info) {
+		assertEquals(0, info.getCurrentRepetition() % 2,
+				"Falha no teste de repetição.");
+	}
+
+	@RepeatedTest(value = 5, failureThreshold = 2, name = MODEL_TITLE)
+	void testRepetitionWithSkip(RepetitionInfo info) {
+		assertEquals(0, info.getCurrentRepetition() % 2,
+				"Falha no teste de repetição.");
+	}
+
 	// Onde PAREI
-	// https://docs.junit.org/current/user-guide/#writing-tests-test-interfaces-and-default-methods
+	// https://docs.junit.org/current/user-guide/#writing-tests-parameterized-tests
 
 	@AfterEach
 	void tearDown() {
