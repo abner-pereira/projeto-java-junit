@@ -22,6 +22,10 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.condition.DisabledIf;
 import org.junit.jupiter.api.condition.EnabledIf;
+import org.junit.jupiter.params.Parameter;
+import org.junit.jupiter.params.ParameterizedClass;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 @DisplayNameGeneration(DisplayNameGenerator.Simple.class)
 // @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -184,6 +188,32 @@ class AppTest {
 	void testRepetitionWithSkip(RepetitionInfo info) {
 		assertEquals(0, info.getCurrentRepetition() % 2,
 				"Falha no teste de repetição.");
+	}
+
+	@Nested
+	@ParameterizedClass
+	@ValueSource(longs = { 20, 25 })
+	class testParameterizedClassValueSource {
+		@Parameter
+		long idade;
+
+		@Test
+		void testCheckAdult() {
+			assertTrue(idade >= 18,
+					"Falha no teste de verificação de maior idade.");
+		}
+
+		@Test
+		@ParameterizedTest
+		@ValueSource(longs = { 10, 8 })
+		void testCheckChild(long nIdade) {
+			assertTrue(nIdade <= 12,
+					"Falha no teste de verificação de menor idade para criança.");
+		}
+	}
+
+	class testParameterizedClassCsvSource {
+
 	}
 
 	// Onde PAREI
