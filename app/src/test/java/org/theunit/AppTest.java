@@ -25,6 +25,7 @@ import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.params.Parameter;
 import org.junit.jupiter.params.ParameterizedClass;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 @DisplayNameGeneration(DisplayNameGenerator.Simple.class)
@@ -190,10 +191,11 @@ class AppTest {
 				"Falha no teste de repetição.");
 	}
 
+	// Classes de Parametrização e Testes
 	@Nested
 	@ParameterizedClass
-	@ValueSource(longs = { 20, 25 })
-	class testParameterizedClassValueSource {
+	@ValueSource(longs = { 20, 17 })
+	class testParameterizedClassValueSourceOne {
 		@Parameter
 		long idade;
 
@@ -202,18 +204,47 @@ class AppTest {
 			assertTrue(idade >= 18,
 					"Falha no teste de verificação de maior idade.");
 		}
+	}
 
-		@Test
+	@Nested
+	class testParameterizedClassValueSourceTwo {
 		@ParameterizedTest
-		@ValueSource(longs = { 10, 8 })
+		@ValueSource(longs = { 15, 8 })
 		void testCheckChild(long nIdade) {
 			assertTrue(nIdade <= 12,
 					"Falha no teste de verificação de menor idade para criança.");
 		}
 	}
 
-	class testParameterizedClassCsvSource {
+	@Nested
+	@ParameterizedClass
+	@CsvSource(delimiter = ';', value = {
+			"Toyota Pr 2026; 19500.10",
+			"Mercedes Bens 2025; 20450.55" })
+	class testParameterizedClassCsvSourceOne {
+		@Parameter(value = 0)
+		String marca;
 
+		@Parameter(value = 1)
+		Double preco;
+
+		@Test
+		void testMaximumPrice() {
+			assertTrue(preco <= 19700,
+					"Falha na verificação de limite máximo de preço de compra de carro.");
+		}
+	}
+
+	@Nested
+	class testParameterizedClassCsvSourceTwo {
+		@ParameterizedTest
+		@CsvSource(delimiter = ';', value = {
+				"1035-A-45; C",
+				"1027-G-95; E"
+		})
+		void testMinimumDriverLicense(String regLicense, String catLicense) {
+			assertEquals("E", catLicense, "Falha na verificação de permissão direção para carreta.");
+		}
 	}
 
 	// Onde PAREI
