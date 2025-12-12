@@ -243,12 +243,12 @@ class AppTest {
 				"1027-G-95; E"
 		})
 		void testMinimumDriverLicense(String regLicense, String catLicense) {
-			assertEquals("E", catLicense, "Falha na verificação de permissão direção para carreta.");
+			assertEquals("E", catLicense, "Falha na verificação de permissão de direção para carreta.");
 		}
 	}
 
 	// Onde PAREI
-	// https://docs.junit.org/current/user-guide/#writing-tests-parameterized-tests
+	// https://docs.junit.org/current/user-guide/#writing-tests-parameterized-tests-sources
 
 	@AfterEach
 	void tearDown() {
