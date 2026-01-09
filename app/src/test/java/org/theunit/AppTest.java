@@ -26,6 +26,9 @@ import org.junit.jupiter.params.Parameter;
 import org.junit.jupiter.params.ParameterizedClass;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.EnumSource;
+import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 @DisplayNameGeneration(DisplayNameGenerator.Simple.class)
@@ -216,6 +219,7 @@ class AppTest {
 		}
 	}
 
+	// CsvSource
 	@Nested
 	@ParameterizedClass
 	@CsvSource(delimiter = ';', value = {
@@ -247,8 +251,54 @@ class AppTest {
 		}
 	}
 
+	@Nested
+	class testSourceAndArguments {
+		// ValueSource
+		@ParameterizedTest
+		@ValueSource(classes = { String.class })
+		void testForValueSource(Class<?> caracter) {
+			assertNotEquals(String.class, caracter.getClass(),
+					"Falha na verificação de tipos de objeto.");
+		}
+
+		// NullSource e EmptySource
+		@ParameterizedTest
+		@EmptySource
+		void testEmptySource(String carName) {
+			assertTrue(carName.isEmpty(),
+					"Falha na verificação da identificação da marca do carro.");
+		}
+
+		@ParameterizedTest
+		@NullSource
+		void testNullSource(Integer carAge) {
+			assertTrue(carAge == null,
+					"Falha na verificação da identificação do ano do carro.");
+		}
+
+		// EnumSource
+		enum DaysOfTheWeek {
+			SUN, MON, TUE, WED, THU, FRI, SAT
+		}
+
+		enum WorkingDays {
+			MON, TUE, WED, THU, FRI
+		}
+
+		@ParameterizedTest
+		@EnumSource(from = "THU", to = "SAT", value = DaysOfTheWeek.class)
+		void testEnumSource(DaysOfTheWeek days) {
+			assertDoesNotThrow(() -> {
+				WorkingDays.valueOf(days.name());
+			}, "Falha na verificação de dias de trabalho.");
+		}
+
+		// CsvFileSource
+
+	}
+
 	// Onde PAREI
-	// https://docs.junit.org/current/user-guide/#writing-tests-parameterized-tests-sources
+	// https://docs.junit.org/6.0.1/writing-tests/parameterized-classes-and-tests#tests-argument-count-validation
 
 	@AfterEach
 	void tearDown() {
