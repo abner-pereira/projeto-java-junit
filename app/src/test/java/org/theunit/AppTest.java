@@ -25,6 +25,7 @@ import org.junit.jupiter.api.condition.EnabledIf;
 import org.junit.jupiter.params.Parameter;
 import org.junit.jupiter.params.ParameterizedClass;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -294,7 +295,14 @@ class AppTest {
 		}
 
 		// CsvFileSource
+		@ParameterizedTest
+		@CsvFileSource(resources = "/employer.csv", useHeadersInDisplayName = false, numLinesToSkip = 1)
+		void testCsvFileSource(Integer employerID, String employerName, Double employerSalary) {
+			assertTrue(employerSalary > Double.valueOf(10000.00),
+					"Falha na verificação de faixa salarial aceitável");
 
+			System.out.printf("ID: %d; Name: %s; Salary: %.02f || ", employerID, employerName, employerSalary);
+		}
 	}
 
 	// Onde PAREI
