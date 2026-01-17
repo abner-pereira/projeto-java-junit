@@ -22,6 +22,7 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.condition.DisabledIf;
 import org.junit.jupiter.api.condition.EnabledIf;
+import org.junit.jupiter.params.ArgumentCountValidationMode;
 import org.junit.jupiter.params.Parameter;
 import org.junit.jupiter.params.ParameterizedClass;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -69,6 +70,7 @@ class AppTest {
 				"Falha no teste de verificação de inteiro.");
 	}
 
+	// Assumptions
 	@Test
 	void testAssume() {
 		// Condição de execução do teste
@@ -80,6 +82,7 @@ class AppTest {
 				"Falha no teste de verificação de valores informados.");
 	}
 
+	// Exception Handling
 	@Test
 	void testUncaughtException() {
 		new App().getMedScore(Double.valueOf("A.A"));
@@ -110,6 +113,7 @@ class AppTest {
 				"Falha no teste de verificação de NÃO exceção.");
 	}
 
+	// Disabling Tests
 	@Test
 	@Disabled
 	void testDisabled() {
@@ -118,7 +122,7 @@ class AppTest {
 				"Falha na verificação de igualdade de valores.");
 	}
 
-	// Teste com Condição de Execução Interna
+	// Conditional Test Execution - Internal
 	@Test
 	@EnabledIf("executeCondition")
 	void testCustomInternalCondition() {
@@ -130,7 +134,7 @@ class AppTest {
 		return false;
 	}
 
-	// Teste com Condição de Execução Externa
+	// Conditional Test Execution - External
 	@Test
 	@DisabledIf("org.theunit.App#disableTestCondition")
 	void testCustomExternalCondition() {
@@ -149,7 +153,7 @@ class AppTest {
 		}, "Falha no teste de verificação de tempo de processamento.");
 	}
 
-	// Classe Aninhada de Teste
+	// Nested Tests
 	@Nested
 	class SubAppTest {
 		static Integer count = 1;
@@ -180,7 +184,7 @@ class AppTest {
 		}
 	}
 
-	// Repetição
+	// Repeated Tests
 	final String MODEL_TITLE = "{displayName} {currentRepetition} of {totalRepetitions}";
 
 	@RepeatedTest(value = 5, name = MODEL_TITLE)
@@ -195,7 +199,7 @@ class AppTest {
 				"Falha no teste de repetição.");
 	}
 
-	// Classes de Parametrização e Testes
+	// Parameterized Classes and Tests
 	@Nested
 	@ParameterizedClass
 	@ValueSource(longs = { 20, 17 })
@@ -252,8 +256,9 @@ class AppTest {
 		}
 	}
 
+	// Sources of Arguments
 	@Nested
-	class testSourceAndArguments {
+	class testSourcesOfArguments {
 		// ValueSource
 		@ParameterizedTest
 		@ValueSource(classes = { String.class })
@@ -305,8 +310,15 @@ class AppTest {
 		}
 	}
 
+	// Argument Count Validation
+	@ParameterizedTest(argumentCountValidation = ArgumentCountValidationMode.STRICT)
+	@CsvSource(value = { "Maria; Sampaio" }, delimiter = ';')
+	void testArgsCountValidation(String name) {
+		// Erro ao tentar executar
+	}
+
 	// Onde PAREI
-	// https://docs.junit.org/6.0.1/writing-tests/parameterized-classes-and-tests#tests-argument-count-validation
+	// https://docs.junit.org/6.0.1/writing-tests/parameterized-classes-and-tests#tests-argument-conversion
 
 	@AfterEach
 	void tearDown() {
