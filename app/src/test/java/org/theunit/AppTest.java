@@ -26,6 +26,8 @@ import org.junit.jupiter.params.ArgumentCountValidationMode;
 import org.junit.jupiter.params.Parameter;
 import org.junit.jupiter.params.ParameterizedClass;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.converter.ConvertWith;
+import org.junit.jupiter.params.converter.SimpleArgumentConverter;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.EmptySource;
@@ -304,21 +306,71 @@ class AppTest {
 		@CsvFileSource(resources = "/employer.csv", useHeadersInDisplayName = false, numLinesToSkip = 1)
 		void testCsvFileSource(Integer employerID, String employerName, Double employerSalary) {
 			assertTrue(employerSalary > Double.valueOf(10000.00),
-					"Falha na verificação de faixa salarial aceitável");
+					"Falha na verificação de faixa salarial aceitável.");
 
 			System.out.printf("ID: %d; Name: %s; Salary: %.02f || ", employerID, employerName, employerSalary);
 		}
 	}
 
 	// Argument Count Validation
-	@ParameterizedTest(argumentCountValidation = ArgumentCountValidationMode.STRICT)
+	@ParameterizedTest(argumentCountValidation = ArgumentCountValidationMode.STRICT, name = "testArgsCountValidation")
 	@CsvSource(value = { "Maria; Sampaio" }, delimiter = ';')
 	void testArgsCountValidation(String name) {
 		// Erro ao tentar executar
 	}
 
+	// Argument Conversion
+	// Implicit
+	static class SubClassVehicle {
+		private String placa;
+
+		private SubClassVehicle(String placa) {
+			this.placa = placa;
+		}
+
+		String getPlaca() {
+			return this.placa;
+		}
+
+		// Público e Estático para Instanciação do Objeto (Exemplo)
+		static SubClassVehicle factory(String placa) {
+			return new SubClassVehicle(placa);
+		}
+	}
+
+	@ParameterizedTest(name = "testImplicitConv")
+	@ValueSource(strings = "DDR9F455")
+	void testImplicitConv(SubClassVehicle veiculo) {
+		assertEquals("DDR9F455", veiculo.getPlaca(),
+				"Falha na verificação de emplacamento de veiculo.");
+	}
+
+	// Explicit
+	static class SubClassMotorcycle extends SimpleArgumentConverter {
+		@Override
+		protected Object convert(Object source, Class<?> targetType) {
+			if (source instanceof String args) {
+				if (!args.matches("^[0-9]")) {
+					return args;
+				} else {
+					return Integer.valueOf(args);
+				}
+			}
+			return null;
+		}
+	}
+
+	@ParameterizedTest(name = "testExplicitConv")
+	@CsvSource(value = "Mercedez XL 2025,3")
+	void testExplicitConv(
+			@ConvertWith(value = SubClassMotorcycle.class) String modelo,
+			@ConvertWith(value = SubClassMotorcycle.class) Integer qtdRoda) {
+		assertTrue(qtdRoda.equals(Integer.valueOf(2)) || qtdRoda.equals(Integer.valueOf(3)),
+				"Falha na verificação de quantidade de rodas da motocicleta.");
+	}
+
 	// Onde PAREI
-	// https://docs.junit.org/6.0.1/writing-tests/parameterized-classes-and-tests#tests-argument-conversion
+	// https://docs.junit.org/6.0.1/writing-tests/parameterized-classes-and-tests#tests-argument-aggregation
 
 	@AfterEach
 	void tearDown() {
