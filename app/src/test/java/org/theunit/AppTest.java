@@ -22,10 +22,14 @@ import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.RepetitionInfo;
 import org.junit.jupiter.api.condition.DisabledIf;
 import org.junit.jupiter.api.condition.EnabledIf;
+import org.junit.jupiter.api.extension.AnnotatedElementContext;
 import org.junit.jupiter.params.ArgumentCountValidationMode;
 import org.junit.jupiter.params.Parameter;
 import org.junit.jupiter.params.ParameterizedClass;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.aggregator.AggregateWith;
+import org.junit.jupiter.params.aggregator.ArgumentsAccessor;
+import org.junit.jupiter.params.aggregator.SimpleArgumentsAggregator;
 import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.converter.SimpleArgumentConverter;
 import org.junit.jupiter.params.provider.CsvFileSource;
@@ -369,8 +373,63 @@ class AppTest {
 				"Falha na verificação de quantidade de rodas da motocicleta.");
 	}
 
+	// Argument Aggregation
+	static class SubClassPhone {
+		private String marca;
+		private Double preco;
+
+		SubClassPhone(String marca, Double preco) {
+			this.marca = marca;
+			this.preco = preco;
+		}
+
+		String getMarca() {
+			return this.marca;
+		}
+
+		Double getPreco() {
+			return this.preco;
+		}
+	}
+
+	// With Arguments Accessor
+	@ParameterizedTest
+	@CsvSource(value = {
+			"IPhone X5, 5990.99",
+			"Motorola KL5, 4995.80" })
+	void testWithArgumentsAccessor(ArgumentsAccessor args) {
+		var phone = new SubClassPhone(args.getString(0),
+				args.get(1, Double.class));
+
+		assertTrue(phone.getPreco() <= Double.valueOf(5000.0),
+				"Falha na verificação do cadastro de promoção de smartphone.");
+	}
+
+	// With Custom Aggregators
+	static class SubArgumentsAggregatorPhone extends SimpleArgumentsAggregator {
+		protected Object aggregateArguments(
+				ArgumentsAccessor accessor,
+				Class<?> targetType,
+				AnnotatedElementContext context,
+				int parameterIndex) {
+
+			return new SubClassPhone(
+					accessor.getString(0),
+					accessor.get(1, Double.class));
+		}
+	}
+
+	@ParameterizedTest
+	@CsvSource(value = "Samsung KZ7, 7989.99")
+	void testWithCustomAggregators(
+			@AggregateWith(SubArgumentsAggregatorPhone.class) SubClassPhone phone) {
+
+		assertTrue(phone.getMarca().toUpperCase().substring(0, 7).equals("SAMSUNG"),
+				"Falha na verificação da marca do smartphone Samsung.");
+	}
+
 	// Onde PAREI
-	// https://docs.junit.org/6.0.1/writing-tests/parameterized-classes-and-tests#tests-argument-aggregation
+	// https://docs.junit.org/6.0.1/writing-tests/parameterized-classes-and-tests#tests-display-names
 
 	@AfterEach
 	void tearDown() {
