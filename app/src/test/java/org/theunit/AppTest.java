@@ -428,8 +428,20 @@ class AppTest {
 				"Falha na verificação da marca do smartphone Samsung.");
 	}
 
+	// Customizing Display Names
+	@DisplayName(value = "Test Rent City")
+	@ParameterizedTest(name = "{displayName} => Reg. {index} => City {0}; Price {1}")
+	@CsvSource(value = {
+			"New York, 1450.95",
+			"San Diego, 1200.10"
+	})
+	void testCustomDisplayName(String city, Double price) {
+		final Double MAX_PROMO = Double.valueOf(1000.0);
+		assertFalse(price <= MAX_PROMO, "Falha na verificação de aluguel.");
+	}
+
 	// Onde PAREI
-	// https://docs.junit.org/6.0.1/writing-tests/parameterized-classes-and-tests#tests-display-names
+	// https://docs.junit.org/6.0.1/writing-tests/dynamic-tests.html
 
 	@AfterEach
 	void tearDown() {
