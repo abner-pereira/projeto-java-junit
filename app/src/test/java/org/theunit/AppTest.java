@@ -441,7 +441,7 @@ class AppTest {
 	}
 
 	// Onde PAREI
-	// https://docs.junit.org/6.0.1/writing-tests/dynamic-tests.html
+	// https://docs.junit.org/6.0.1/writing-tests/timeouts.html
 
 	@AfterEach
 	void tearDown() {
