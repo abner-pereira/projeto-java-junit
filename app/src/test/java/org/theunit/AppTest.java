@@ -440,9 +440,6 @@ class AppTest {
 		assertFalse(price <= MAX_PROMO, "Falha na verificação de aluguel.");
 	}
 
-	// Onde PAREI
-	// https://docs.junit.org/6.0.1/writing-tests/timeouts.html
-
 	@AfterEach
 	void tearDown() {
 	}
